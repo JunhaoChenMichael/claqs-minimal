@@ -1,0 +1,1324 @@
+{
+  "date": "2026-10-13",
+  "dataset": "SST-2",
+  "evaluation_split": "official_validation",
+  "validation_samples": 872,
+  "hidden_test_evaluated": false,
+  "data_overlap_audit": {
+    "normalization": "Existing basic_tokenizer followed by single-space join",
+    "legacy_holdout_seed": 42,
+    "legacy_holdout_rows": 6734,
+    "legacy_holdout_rows_matching_training_partition": 1560,
+    "official_validation_rows_matching_full_training": 2,
+    "official_validation_split_modified": false
+  },
+  "hardware": "NVIDIA RTX A5000 (24 GB)",
+  "torch_version": "2.3.0+cu121",
+  "tests": {
+    "passed": 11,
+    "description": "Local experiment and model regression suite; includes sparse/dense forward and gradient equivalence."
+  },
+  "selection_rule": "Highest official validation accuracy among four epochs for each new run.",
+  "runs": {
+    "control_s42": {
+      "label": "Control",
+      "stage": "pilot",
+      "config": {
+        "device": "cuda",
+        "epochs": 4,
+        "qubits": 8,
+        "degree": 3,
+        "ansatz_layers": 2,
+        "ff_layers": 1,
+        "dimension": 128,
+        "window": 64,
+        "stride": 64,
+        "batch_size": 32,
+        "max_windows": 1,
+        "dataset_window_cap": 12,
+        "workers": 0,
+        "seed": 42,
+        "cpu_threads": 2,
+        "max_vocab": 30000,
+        "min_freq": 1,
+        "train_limit": 8192,
+        "val_limit": 0,
+        "patience": 0,
+        "dropout": 0.1,
+        "head_dropout": 0.0,
+        "lr": 0.001,
+        "weight_decay": 0.0,
+        "label_smoothing": 0.0,
+        "val_ratio": 0.1,
+        "max_grad_norm": 5.0,
+        "mask_padding": false,
+        "optimizer": "adam",
+        "schedule": "constant",
+        "sparse_padding": false
+      },
+      "data_protocol": {
+        "train_sha256": "c7921283b75a42e685f50edecb96798607ea0fcbfd0739ee8975f22c12d55f09",
+        "split_seed": 42,
+        "validation_source": "external",
+        "validation_sha256": "fb00fe008f6828f86ba2beda8415a4cf5da0c884f21c5f238c87131b5aa19529",
+        "subset_count": 8192,
+        "subset_indices_sha256": "8332a047c0b7d76540f239053c95dc4f79d5838f4b0f5334691fefa09a708b52"
+      },
+      "metrics": {
+        "train_samples": 8192,
+        "validation_samples": 872,
+        "vocab_size": 9159,
+        "real_parameters": 1184230,
+        "device": "cuda",
+        "torch_version": "2.3.0+cu121",
+        "best_epoch": 3,
+        "best_validation": {
+          "loss": 0.6060785189134266,
+          "accuracy": 0.7419724770642202,
+          "macro_precision": 0.7573227286338806,
+          "macro_recall": 0.7441378235816956,
+          "macro_f1": 0.739131510257721,
+          "samples": 872,
+          "confusion": [
+            [
+              369,
+              59
+            ],
+            [
+              166,
+              278
+            ]
+          ]
+        },
+        "elapsed_seconds": 363.77813955023885,
+        "completed_epochs": 4,
+        "peak_gpu_memory_mb": 853.06494140625,
+        "evaluation_split": "validation",
+        "test_evaluated": false
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.6789621924981475,
+          "train_accuracy": 0.5870361328125,
+          "validation": {
+            "loss": 0.6242226575492719,
+            "accuracy": 0.6823394495412844,
+            "macro_precision": 0.682610273361206,
+            "macro_recall": 0.6817483901977539,
+            "macro_f1": 0.681702733039856,
+            "samples": 872,
+            "confusion": [
+              [
+                278,
+                150
+              ],
+              [
+                127,
+                317
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 91.60254988633096
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.40637449943460524,
+          "train_accuracy": 0.8209228515625,
+          "validation": {
+            "loss": 0.581118454353525,
+            "accuracy": 0.7305045871559633,
+            "macro_precision": 0.7385728359222412,
+            "macro_recall": 0.7287088632583618,
+            "macro_f1": 0.7271280884742737,
+            "samples": 872,
+            "confusion": [
+              [
+                270,
+                158
+              ],
+              [
+                77,
+                367
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 89.80704849772155
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.20856525786803104,
+          "train_accuracy": 0.9190673828125,
+          "validation": {
+            "loss": 0.6060785189134266,
+            "accuracy": 0.7419724770642202,
+            "macro_precision": 0.7573227286338806,
+            "macro_recall": 0.7441378235816956,
+            "macro_f1": 0.739131510257721,
+            "samples": 872,
+            "confusion": [
+              [
+                369,
+                59
+              ],
+              [
+                166,
+                278
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 91.38703847490251
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.12840406505347346,
+          "train_accuracy": 0.9537353515625,
+          "validation": {
+            "loss": 0.7451380012779061,
+            "accuracy": 0.7178899082568807,
+            "macro_precision": 0.720572829246521,
+            "macro_recall": 0.7167424559593201,
+            "macro_f1": 0.7162644863128662,
+            "samples": 872,
+            "confusion": [
+              [
+                280,
+                148
+              ],
+              [
+                98,
+                346
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 90.90432948805392
+        }
+      ]
+    },
+    "pad_mask_s42": {
+      "label": "Padding mask",
+      "stage": "pilot",
+      "config": {
+        "device": "cuda",
+        "epochs": 4,
+        "qubits": 8,
+        "degree": 3,
+        "ansatz_layers": 2,
+        "ff_layers": 1,
+        "dimension": 128,
+        "window": 64,
+        "stride": 64,
+        "batch_size": 32,
+        "max_windows": 1,
+        "dataset_window_cap": 12,
+        "workers": 0,
+        "seed": 42,
+        "cpu_threads": 2,
+        "max_vocab": 30000,
+        "min_freq": 1,
+        "train_limit": 8192,
+        "val_limit": 0,
+        "patience": 0,
+        "dropout": 0.1,
+        "head_dropout": 0.0,
+        "lr": 0.001,
+        "weight_decay": 0.0,
+        "label_smoothing": 0.0,
+        "val_ratio": 0.1,
+        "max_grad_norm": 5.0,
+        "mask_padding": true,
+        "optimizer": "adam",
+        "schedule": "constant",
+        "sparse_padding": false
+      },
+      "data_protocol": {
+        "train_sha256": "c7921283b75a42e685f50edecb96798607ea0fcbfd0739ee8975f22c12d55f09",
+        "split_seed": 42,
+        "validation_source": "external",
+        "validation_sha256": "fb00fe008f6828f86ba2beda8415a4cf5da0c884f21c5f238c87131b5aa19529",
+        "subset_count": 8192,
+        "subset_indices_sha256": "8332a047c0b7d76540f239053c95dc4f79d5838f4b0f5334691fefa09a708b52"
+      },
+      "metrics": {
+        "train_samples": 8192,
+        "validation_samples": 872,
+        "vocab_size": 9159,
+        "real_parameters": 1184230,
+        "device": "cuda",
+        "torch_version": "2.3.0+cu121",
+        "best_epoch": 2,
+        "best_validation": {
+          "loss": 0.4908385145554849,
+          "accuracy": 0.7672018348623854,
+          "macro_precision": 0.7671234011650085,
+          "macro_recall": 0.767144501209259,
+          "macro_f1": 0.7671329975128174,
+          "samples": 872,
+          "confusion": [
+            [
+              327,
+              101
+            ],
+            [
+              102,
+              342
+            ]
+          ]
+        },
+        "elapsed_seconds": 363.06110371649265,
+        "completed_epochs": 4,
+        "peak_gpu_memory_mb": 853.08251953125,
+        "evaluation_split": "validation",
+        "test_evaluated": false
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.5560757257044315,
+          "train_accuracy": 0.70947265625,
+          "validation": {
+            "loss": 0.5074242517488812,
+            "accuracy": 0.7534403669724771,
+            "macro_precision": 0.7634708881378174,
+            "macro_recall": 0.7515681982040405,
+            "macro_f1": 0.7500876188278198,
+            "samples": 872,
+            "confusion": [
+              [
+                278,
+                150
+              ],
+              [
+                65,
+                379
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 91.80385908298194
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.26007021820987575,
+          "train_accuracy": 0.899169921875,
+          "validation": {
+            "loss": 0.4908385145554849,
+            "accuracy": 0.7672018348623854,
+            "macro_precision": 0.7671234011650085,
+            "macro_recall": 0.767144501209259,
+            "macro_f1": 0.7671329975128174,
+            "samples": 872,
+            "confusion": [
+              [
+                327,
+                101
+              ],
+              [
+                102,
+                342
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 92.50848059356213
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.13937017868738621,
+          "train_accuracy": 0.9481201171875,
+          "validation": {
+            "loss": 0.5540926303338567,
+            "accuracy": 0.7442660550458715,
+            "macro_precision": 0.7454090118408203,
+            "macro_recall": 0.7435274124145508,
+            "macro_f1": 0.743520975112915,
+            "samples": 872,
+            "confusion": [
+              [
+                301,
+                127
+              ],
+              [
+                96,
+                348
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 89.69970897398889
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.08357217855154886,
+          "train_accuracy": 0.96923828125,
+          "validation": {
+            "loss": 0.6153321290781738,
+            "accuracy": 0.7545871559633027,
+            "macro_precision": 0.7545244097709656,
+            "macro_recall": 0.7545887231826782,
+            "macro_f1": 0.7545406818389893,
+            "samples": 872,
+            "confusion": [
+              [
+                323,
+                105
+              ],
+              [
+                109,
+                335
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 89.00027332082391
+        }
+      ]
+    },
+    "regularized_s42": {
+      "label": "Padding mask + regularization bundle",
+      "stage": "pilot",
+      "config": {
+        "device": "cuda",
+        "epochs": 4,
+        "qubits": 8,
+        "degree": 3,
+        "ansatz_layers": 2,
+        "ff_layers": 1,
+        "dimension": 128,
+        "window": 64,
+        "stride": 64,
+        "batch_size": 32,
+        "max_windows": 1,
+        "dataset_window_cap": 12,
+        "workers": 0,
+        "seed": 42,
+        "cpu_threads": 2,
+        "max_vocab": 30000,
+        "min_freq": 1,
+        "train_limit": 8192,
+        "val_limit": 0,
+        "patience": 0,
+        "dropout": 0.1,
+        "head_dropout": 0.1,
+        "lr": 0.001,
+        "weight_decay": 0.01,
+        "label_smoothing": 0.0,
+        "val_ratio": 0.1,
+        "max_grad_norm": 5.0,
+        "mask_padding": true,
+        "optimizer": "adamw",
+        "schedule": "cosine",
+        "sparse_padding": false
+      },
+      "data_protocol": {
+        "train_sha256": "c7921283b75a42e685f50edecb96798607ea0fcbfd0739ee8975f22c12d55f09",
+        "split_seed": 42,
+        "validation_source": "external",
+        "validation_sha256": "fb00fe008f6828f86ba2beda8415a4cf5da0c884f21c5f238c87131b5aa19529",
+        "subset_count": 8192,
+        "subset_indices_sha256": "8332a047c0b7d76540f239053c95dc4f79d5838f4b0f5334691fefa09a708b52"
+      },
+      "metrics": {
+        "train_samples": 8192,
+        "validation_samples": 872,
+        "vocab_size": 9159,
+        "real_parameters": 1184230,
+        "device": "cuda",
+        "torch_version": "2.3.0+cu121",
+        "best_epoch": 2,
+        "best_validation": {
+          "loss": 0.49037930150644493,
+          "accuracy": 0.7660550458715596,
+          "macro_precision": 0.7663571238517761,
+          "macro_recall": 0.7656394839286804,
+          "macro_f1": 0.7657395601272583,
+          "samples": 872,
+          "confusion": [
+            [
+              318,
+              110
+            ],
+            [
+              94,
+              350
+            ]
+          ]
+        },
+        "elapsed_seconds": 365.93189165368676,
+        "completed_epochs": 4,
+        "peak_gpu_memory_mb": 853.08251953125,
+        "evaluation_split": "validation",
+        "test_evaluated": false
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.5640762227121741,
+          "train_accuracy": 0.7008056640625,
+          "validation": {
+            "loss": 0.5067801825497129,
+            "accuracy": 0.7568807339449541,
+            "macro_precision": 0.7649475336074829,
+            "macro_recall": 0.7551990747451782,
+            "macro_f1": 0.7541440725326538,
+            "samples": 872,
+            "confusion": [
+              [
+                284,
+                144
+              ],
+              [
+                68,
+                376
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 92.89533660374582
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.25547915635979734,
+          "train_accuracy": 0.90185546875,
+          "validation": {
+            "loss": 0.49037930150644493,
+            "accuracy": 0.7660550458715596,
+            "macro_precision": 0.7663571238517761,
+            "macro_recall": 0.7656394839286804,
+            "macro_f1": 0.7657395601272583,
+            "samples": 872,
+            "confusion": [
+              [
+                318,
+                110
+              ],
+              [
+                94,
+                350
+              ]
+            ]
+          },
+          "lr": 0.0008535533905932737,
+          "seconds": 91.08074875175953
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.12646428419975564,
+          "train_accuracy": 0.953857421875,
+          "validation": {
+            "loss": 0.5535012833569029,
+            "accuracy": 0.7580275229357798,
+            "macro_precision": 0.7600605487823486,
+            "macro_recall": 0.7571251392364502,
+            "macro_f1": 0.7570610046386719,
+            "samples": 872,
+            "confusion": [
+              [
+                303,
+                125
+              ],
+              [
+                86,
+                358
+              ]
+            ]
+          },
+          "lr": 0.0005,
+          "seconds": 90.6406182590872
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.07240412516330252,
+          "train_accuracy": 0.976318359375,
+          "validation": {
+            "loss": 0.5910453963170358,
+            "accuracy": 0.7534403669724771,
+            "macro_precision": 0.7561095952987671,
+            "macro_recall": 0.7524101734161377,
+            "macro_f1": 0.7522279024124146,
+            "samples": 872,
+            "confusion": [
+              [
+                298,
+                130
+              ],
+              [
+                85,
+                359
+              ]
+            ]
+          },
+          "lr": 0.00014644660940672628,
+          "seconds": 91.26816055551171
+        }
+      ]
+    },
+    "control_s43": {
+      "label": "Control",
+      "stage": "pilot",
+      "config": {
+        "device": "cuda",
+        "epochs": 4,
+        "qubits": 8,
+        "degree": 3,
+        "ansatz_layers": 2,
+        "ff_layers": 1,
+        "dimension": 128,
+        "window": 64,
+        "stride": 64,
+        "batch_size": 32,
+        "max_windows": 1,
+        "dataset_window_cap": 12,
+        "workers": 0,
+        "seed": 43,
+        "cpu_threads": 2,
+        "max_vocab": 30000,
+        "min_freq": 1,
+        "train_limit": 8192,
+        "val_limit": 0,
+        "patience": 0,
+        "dropout": 0.1,
+        "head_dropout": 0.0,
+        "lr": 0.001,
+        "weight_decay": 0.0,
+        "label_smoothing": 0.0,
+        "val_ratio": 0.1,
+        "max_grad_norm": 5.0,
+        "mask_padding": false,
+        "sparse_padding": false,
+        "optimizer": "adam",
+        "schedule": "constant"
+      },
+      "data_protocol": {
+        "train_sha256": "c7921283b75a42e685f50edecb96798607ea0fcbfd0739ee8975f22c12d55f09",
+        "split_seed": 43,
+        "validation_source": "external",
+        "validation_sha256": "fb00fe008f6828f86ba2beda8415a4cf5da0c884f21c5f238c87131b5aa19529",
+        "subset_count": 8192,
+        "subset_indices_sha256": "8e905a95dc614f43170391244dd280f0c458e2d3b2e835bd7a137ea641d295c3"
+      },
+      "metrics": {
+        "train_samples": 8192,
+        "validation_samples": 872,
+        "vocab_size": 9196,
+        "real_parameters": 1188966,
+        "device": "cuda",
+        "torch_version": "2.3.0+cu121",
+        "versions": {
+          "torchquantum": "0.1.8",
+          "pyarrow": "21.0.0",
+          "python": "3.11.0"
+        },
+        "source_sha256": {
+          "experiment.py": "1afe3ef5c04c27fcc859531e32b6958d3523c6dfad14c41d7f8f30c47f003f5c",
+          "final.py": "c620a107bc1ea1b21c8024328dacbf839892cae1354010f78db5f3370001dc35",
+          "run_classification_quantum.py": "c931f6c7f052e6a1ef7ae48a20b072af3cf401747d8a46aa45dccfc42c7fff3c",
+          "quixer/quixer_model.py": "2abc63b74438b6f7c32d8b0ad442f887ab2b23702b4b453063e850f6b180b4ce"
+        },
+        "gpu": "NVIDIA RTX A5000",
+        "best_epoch": 3,
+        "best_validation": {
+          "loss": 0.7218270219794107,
+          "accuracy": 0.7270642201834863,
+          "macro_precision": 0.7269836664199829,
+          "macro_recall": 0.726888120174408,
+          "macro_f1": 0.7269206047058105,
+          "samples": 872,
+          "confusion": [
+            [
+              307,
+              121
+            ],
+            [
+              117,
+              327
+            ]
+          ]
+        },
+        "elapsed_seconds": 368.09788840822875,
+        "completed_epochs": 4,
+        "peak_gpu_memory_mb": 853.119140625,
+        "evaluation_split": "validation",
+        "test_evaluated": false
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.6610481039388105,
+          "train_accuracy": 0.590576171875,
+          "validation": {
+            "loss": 0.5887682689439266,
+            "accuracy": 0.698394495412844,
+            "macro_precision": 0.7108729481697083,
+            "macro_recall": 0.7005031108856201,
+            "macro_f1": 0.6952195763587952,
+            "samples": 872,
+            "confusion": [
+              [
+                349,
+                79
+              ],
+              [
+                184,
+                260
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 92.32861440628767
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.3649825840257108,
+          "train_accuracy": 0.8402099609375,
+          "validation": {
+            "loss": 0.6706112273242495,
+            "accuracy": 0.7178899082568807,
+            "macro_precision": 0.7237392067909241,
+            "macro_recall": 0.7162793874740601,
+            "macro_f1": 0.7149872779846191,
+            "samples": 872,
+            "confusion": [
+              [
+                269,
+                159
+              ],
+              [
+                87,
+                357
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 92.49259793944657
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.19987558061257005,
+          "train_accuracy": 0.923095703125,
+          "validation": {
+            "loss": 0.7218270219794107,
+            "accuracy": 0.7270642201834863,
+            "macro_precision": 0.7269836664199829,
+            "macro_recall": 0.726888120174408,
+            "macro_f1": 0.7269206047058105,
+            "samples": 872,
+            "confusion": [
+              [
+                307,
+                121
+              ],
+              [
+                117,
+                327
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 90.58513472415507
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.12778483325018897,
+          "train_accuracy": 0.9552001953125,
+          "validation": {
+            "loss": 0.868841584122509,
+            "accuracy": 0.716743119266055,
+            "macro_precision": 0.716765284538269,
+            "macro_recall": 0.7168371677398682,
+            "macro_f1": 0.7167248725891113,
+            "samples": 872,
+            "confusion": [
+              [
+                309,
+                119
+              ],
+              [
+                128,
+                316
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 92.61707749776542
+        }
+      ]
+    },
+    "pad_mask_s43": {
+      "label": "Padding mask",
+      "stage": "pilot",
+      "config": {
+        "device": "cuda",
+        "epochs": 4,
+        "qubits": 8,
+        "degree": 3,
+        "ansatz_layers": 2,
+        "ff_layers": 1,
+        "dimension": 128,
+        "window": 64,
+        "stride": 64,
+        "batch_size": 32,
+        "max_windows": 1,
+        "dataset_window_cap": 12,
+        "workers": 0,
+        "seed": 43,
+        "cpu_threads": 2,
+        "max_vocab": 30000,
+        "min_freq": 1,
+        "train_limit": 8192,
+        "val_limit": 0,
+        "patience": 0,
+        "dropout": 0.1,
+        "head_dropout": 0.0,
+        "lr": 0.001,
+        "weight_decay": 0.0,
+        "label_smoothing": 0.0,
+        "val_ratio": 0.1,
+        "max_grad_norm": 5.0,
+        "mask_padding": true,
+        "sparse_padding": true,
+        "optimizer": "adam",
+        "schedule": "constant"
+      },
+      "data_protocol": {
+        "train_sha256": "c7921283b75a42e685f50edecb96798607ea0fcbfd0739ee8975f22c12d55f09",
+        "split_seed": 43,
+        "validation_source": "external",
+        "validation_sha256": "fb00fe008f6828f86ba2beda8415a4cf5da0c884f21c5f238c87131b5aa19529",
+        "subset_count": 8192,
+        "subset_indices_sha256": "8e905a95dc614f43170391244dd280f0c458e2d3b2e835bd7a137ea641d295c3"
+      },
+      "metrics": {
+        "train_samples": 8192,
+        "validation_samples": 872,
+        "vocab_size": 9196,
+        "real_parameters": 1188966,
+        "device": "cuda",
+        "torch_version": "2.3.0+cu121",
+        "versions": {
+          "torchquantum": "0.1.8",
+          "pyarrow": "21.0.0",
+          "python": "3.11.0"
+        },
+        "source_sha256": {
+          "experiment.py": "1afe3ef5c04c27fcc859531e32b6958d3523c6dfad14c41d7f8f30c47f003f5c",
+          "final.py": "c620a107bc1ea1b21c8024328dacbf839892cae1354010f78db5f3370001dc35",
+          "run_classification_quantum.py": "c931f6c7f052e6a1ef7ae48a20b072af3cf401747d8a46aa45dccfc42c7fff3c",
+          "quixer/quixer_model.py": "2abc63b74438b6f7c32d8b0ad442f887ab2b23702b4b453063e850f6b180b4ce"
+        },
+        "gpu": "NVIDIA RTX A5000",
+        "best_epoch": 1,
+        "best_validation": {
+          "loss": 0.5108013481175134,
+          "accuracy": 0.7511467889908257,
+          "macro_precision": 0.7510955333709717,
+          "macro_recall": 0.7511682510375977,
+          "macro_f1": 0.7511072158813477,
+          "samples": 872,
+          "confusion": [
+            [
+              322,
+              106
+            ],
+            [
+              111,
+              333
+            ]
+          ]
+        },
+        "elapsed_seconds": 364.59397361800075,
+        "completed_epochs": 4,
+        "peak_gpu_memory_mb": 230.4404296875,
+        "evaluation_split": "validation",
+        "test_evaluated": false
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.551634767849464,
+          "train_accuracy": 0.708251953125,
+          "validation": {
+            "loss": 0.5108013481175134,
+            "accuracy": 0.7511467889908257,
+            "macro_precision": 0.7510955333709717,
+            "macro_recall": 0.7511682510375977,
+            "macro_f1": 0.7511072158813477,
+            "samples": 872,
+            "confusion": [
+              [
+                322,
+                106
+              ],
+              [
+                111,
+                333
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 91.14806326851249
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.2457668945135083,
+          "train_accuracy": 0.9058837890625,
+          "validation": {
+            "loss": 0.5177837063413148,
+            "accuracy": 0.7454128440366973,
+            "macro_precision": 0.7453314661979675,
+            "macro_recall": 0.7452850341796875,
+            "macro_f1": 0.7453043460845947,
+            "samples": 872,
+            "confusion": [
+              [
+                316,
+                112
+              ],
+              [
+                110,
+                334
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 91.10033639147878
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.1315338914791937,
+          "train_accuracy": 0.9532470703125,
+          "validation": {
+            "loss": 0.5850977842960883,
+            "accuracy": 0.7488532110091743,
+            "macro_precision": 0.7488008737564087,
+            "macro_recall": 0.7486633658409119,
+            "macro_f1": 0.7487074136734009,
+            "samples": 872,
+            "confusion": [
+              [
+                316,
+                112
+              ],
+              [
+                107,
+                337
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 91.14702180027962
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.0763969635572721,
+          "train_accuracy": 0.972900390625,
+          "validation": {
+            "loss": 0.7098893873188474,
+            "accuracy": 0.7327981651376146,
+            "macro_precision": 0.7359984517097473,
+            "macro_recall": 0.7337816953659058,
+            "macro_f1": 0.7323670387268066,
+            "samples": 872,
+            "confusion": [
+              [
+                337,
+                91
+              ],
+              [
+                142,
+                302
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 91.17807241156697
+        }
+      ]
+    },
+    "full_mask_s42": {
+      "label": "Full training set + padding mask",
+      "stage": "full",
+      "config": {
+        "device": "cuda",
+        "epochs": 4,
+        "qubits": 8,
+        "degree": 3,
+        "ansatz_layers": 2,
+        "ff_layers": 1,
+        "dimension": 128,
+        "window": 64,
+        "stride": 64,
+        "batch_size": 256,
+        "max_windows": 1,
+        "dataset_window_cap": 12,
+        "workers": 0,
+        "seed": 42,
+        "cpu_threads": 2,
+        "max_vocab": 30000,
+        "min_freq": 1,
+        "train_limit": 0,
+        "val_limit": 0,
+        "patience": 0,
+        "dropout": 0.1,
+        "head_dropout": 0.0,
+        "lr": 0.001,
+        "weight_decay": 0.0,
+        "label_smoothing": 0.0,
+        "val_ratio": 0.1,
+        "max_grad_norm": 5.0,
+        "mask_padding": true,
+        "sparse_padding": true,
+        "optimizer": "adam",
+        "schedule": "constant"
+      },
+      "data_protocol": {
+        "train_sha256": "c7921283b75a42e685f50edecb96798607ea0fcbfd0739ee8975f22c12d55f09",
+        "split_seed": 42,
+        "validation_source": "external",
+        "validation_sha256": "fb00fe008f6828f86ba2beda8415a4cf5da0c884f21c5f238c87131b5aa19529"
+      },
+      "metrics": {
+        "train_samples": 67349,
+        "validation_samples": 872,
+        "vocab_size": 13819,
+        "real_parameters": 1780710,
+        "device": "cuda",
+        "torch_version": "2.3.0+cu121",
+        "versions": {
+          "torchquantum": "0.1.8",
+          "pyarrow": "21.0.0",
+          "python": "3.11.0"
+        },
+        "source_sha256": {
+          "experiment.py": "1afe3ef5c04c27fcc859531e32b6958d3523c6dfad14c41d7f8f30c47f003f5c",
+          "final.py": "c620a107bc1ea1b21c8024328dacbf839892cae1354010f78db5f3370001dc35",
+          "run_classification_quantum.py": "c931f6c7f052e6a1ef7ae48a20b072af3cf401747d8a46aa45dccfc42c7fff3c",
+          "quixer/quixer_model.py": "2abc63b74438b6f7c32d8b0ad442f887ab2b23702b4b453063e850f6b180b4ce"
+        },
+        "gpu": "NVIDIA RTX A5000",
+        "best_epoch": 1,
+        "best_validation": {
+          "loss": 0.4392134508955369,
+          "accuracy": 0.8130733944954128,
+          "macro_precision": 0.8140084743499756,
+          "macro_recall": 0.812526285648346,
+          "macro_f1": 0.8126987218856812,
+          "samples": 872,
+          "confusion": [
+            [
+              335,
+              93
+            ],
+            [
+              70,
+              374
+            ]
+          ]
+        },
+        "elapsed_seconds": 375.40103274956346,
+        "completed_epochs": 4,
+        "peak_gpu_memory_mb": 1273.68359375,
+        "evaluation_split": "validation",
+        "test_evaluated": false
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.3935271123623494,
+          "train_accuracy": 0.8167307606645978,
+          "validation": {
+            "loss": 0.4392134508955369,
+            "accuracy": 0.8130733944954128,
+            "macro_precision": 0.8140084743499756,
+            "macro_recall": 0.812526285648346,
+            "macro_f1": 0.8126987218856812,
+            "samples": 872,
+            "confusion": [
+              [
+                335,
+                93
+              ],
+              [
+                70,
+                374
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 94.39387139119208
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.2064130720099648,
+          "train_accuracy": 0.919894875944706,
+          "validation": {
+            "loss": 0.4828982178224336,
+            "accuracy": 0.7981651376146789,
+            "macro_precision": 0.8026338219642639,
+            "macro_recall": 0.7970026135444641,
+            "macro_f1": 0.7969302535057068,
+            "samples": 872,
+            "confusion": [
+              [
+                314,
+                114
+              ],
+              [
+                62,
+                382
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 93.16265061683953
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.15033635108573118,
+          "train_accuracy": 0.9416917845847749,
+          "validation": {
+            "loss": 0.5117637126817616,
+            "accuracy": 0.8073394495412844,
+            "macro_precision": 0.807449460029602,
+            "macro_recall": 0.8075271844863892,
+            "macro_f1": 0.807335376739502,
+            "samples": 872,
+            "confusion": [
+              [
+                350,
+                78
+              ],
+              [
+                90,
+                354
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 95.39795132540166
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.11206978184182734,
+          "train_accuracy": 0.9563319425678184,
+          "validation": {
+            "loss": 0.5625771076307384,
+            "accuracy": 0.8061926605504587,
+            "macro_precision": 0.8065617680549622,
+            "macro_recall": 0.8058116436004639,
+            "macro_f1": 0.8059474229812622,
+            "samples": 872,
+            "confusion": [
+              [
+                336,
+                92
+              ],
+              [
+                77,
+                367
+              ]
+            ]
+          },
+          "lr": 0.001,
+          "seconds": 92.4100956954062
+        }
+      ]
+    }
+  },
+  "full_data_checkpoint_reload": {
+    "split": "validation",
+    "metrics": {
+      "loss": 0.4392134946420652,
+      "accuracy": 0.8130733944954128,
+      "macro_precision": 0.8140084743499756,
+      "macro_recall": 0.812526285648346,
+      "macro_f1": 0.8126987218856812,
+      "samples": 872,
+      "confusion": [
+        [
+          335,
+          93
+        ],
+        [
+          70,
+          374
+        ]
+      ]
+    },
+    "data_sha256": "fb00fe008f6828f86ba2beda8415a4cf5da0c884f21c5f238c87131b5aa19529",
+    "checkpoint_sha256": "f89020f6307f156b6193b9c43938cd9bbc086c47afbd385531691e7cd0712237",
+    "checkpoint_epoch": 1
+  },
+  "paired_seed_results": [
+    {
+      "seed": 42,
+      "control_accuracy": 0.7419724770642202,
+      "masked_accuracy": 0.7672018348623854,
+      "masked_minus_control_percentage_points": 2.5229357798165153,
+      "identical_subset_indices": true,
+      "config_differences": {
+        "mask_padding": [
+          false,
+          true
+        ]
+      }
+    },
+    {
+      "seed": 43,
+      "control_accuracy": 0.7270642201834863,
+      "masked_accuracy": 0.7511467889908257,
+      "masked_minus_control_percentage_points": 2.408256880733939,
+      "identical_subset_indices": true,
+      "config_differences": {
+        "mask_padding": [
+          false,
+          true
+        ],
+        "sparse_padding": [
+          false,
+          true
+        ]
+      }
+    }
+  ],
+  "paired_seed_summary": {
+    "seed_count": 2,
+    "seeds": [
+      42,
+      43
+    ],
+    "control_mean_best_validation_accuracy": 0.7345183486238532,
+    "masked_mean_best_validation_accuracy": 0.7591743119266054,
+    "mean_paired_improvement_percentage_points": 2.4655963302752273,
+    "statistical_significance_claimed": false
+  },
+  "historical_snapshot_official_validation": {
+    "dataset": "SST-2",
+    "split": "official_validation",
+    "rows": 872,
+    "correct": 663,
+    "accuracy": 0.7603211009174312,
+    "loss": 0.860467792924391,
+    "precision_macro": 0.7602426124253348,
+    "recall_macro": 0.7602193314810137,
+    "f1_macro": 0.7602299712535933,
+    "confusion_matrix": [
+      [
+        323,
+        105
+      ],
+      [
+        104,
+        340
+      ]
+    ],
+    "evaluation_seconds": 11.051180761307478,
+    "preparation_seconds": 1.3776007238775492,
+    "total_seconds": 12.429389089345932,
+    "gpu": "NVIDIA RTX A5000",
+    "peak_gpu_memory_allocated_bytes": 112495104,
+    "checkpoint_sha256": "697e864fe569617d5c2ca329a347992d1fe3e7e90d9bef3ea444b7380d7eddc4",
+    "stored_epoch": 10,
+    "stored_internal_validation_accuracy": 0.9165429165429165,
+    "vocab_size": 13819,
+    "vocab_sha256": "8010ba97bf3cd709059e144dc38607cea812d13b07fecf51088304ba686a6d66",
+    "train_file_sha256": "c7921283b75a42e685f50edecb96798607ea0fcbfd0739ee8975f22c12d55f09",
+    "evaluation_file_sha256": "fb00fe008f6828f86ba2beda8415a4cf5da0c884f21c5f238c87131b5aa19529",
+    "config": {
+      "qubits": 8,
+      "degree": 5,
+      "ansatz_layers": 6,
+      "quantum_ff_layers": 1,
+      "legacy_ff_parameter_allocation": 192,
+      "embedding_dimension": 512,
+      "window": 128,
+      "stride": 128,
+      "max_windows": 1,
+      "batch_size": 32,
+      "aggregation": "mean_logits",
+      "use_measure_mask": true,
+      "padding_mask": false,
+      "head_dropout": 0.0,
+      "max_vocab": 100000,
+      "min_freq": 1
+    },
+    "load_checks": {
+      "missing_nonparameter_device_buffers": [
+        "base.torchquantum_device.state",
+        "base.torchquantum_device.states"
+      ],
+      "unexpected_keys": [],
+      "all_learned_parameters_matched": true
+    },
+    "provenance_caveat": "Historical checkpoint stores no vocabulary/config/hash. Reconstructed vocabulary from the current full ordered training parquet and recorded tokenizer/settings; dimensions match, but original vocabulary provenance cannot be proven. Official dev was never used for vocabulary or checkpoint selection in this evaluation; no hidden-label test file was read."
+  },
+  "performance": {
+    "dense_vs_sparse_batch32": {
+      "dense": {
+        "seconds_per_forward_backward": 0.3335690559819341,
+        "peak_allocated_mb": 842.79248046875
+      },
+      "sparse": {
+        "seconds_per_forward_backward": 0.34314918648451564,
+        "peak_allocated_mb": 152.94091796875
+      },
+      "valid_tokens": 313,
+      "total_tokens": 2048,
+      "max_logit_difference": 9.5367431640625e-07,
+      "speedup": 0.9720817333104362,
+      "scope": "Same trained checkpoint, 32 real SST-2 examples, A5000, forward+backward only, no optimizer/data-loader, 2 warmup + 10 timed steps; no accuracy inference.",
+      "memory_reduction_fraction": 0.8185307516226459
+    },
+    "sparse_batch_scaling": {
+      "gpu": "NVIDIA RTX A5000",
+      "checkpoint_sha256": "d10d68807fe0abfa80a1fdb4c764c228a013e411d93d91ed6a6eb38924ffcafb",
+      "sparse_padding": true,
+      "protocol": "First N SST-2 train records, saved config and weights; dropout disabled; 2 warmup + 5 measured forward/backward steps, no optimizer or data loader timing, synchronized CUDA, 2 CPU threads.",
+      "batches": {
+        "32": {
+          "seconds_per_step": 0.33586896061897276,
+          "examples_per_second": 95.2752524110213,
+          "peak_allocated_mib": 152.94091796875,
+          "real_tokens": 313,
+          "total_tokens": 2048
+        },
+        "64": {
+          "seconds_per_step": 0.33181093595921995,
+          "examples_per_second": 192.88092423772824,
+          "peak_allocated_mib": 290.32177734375,
+          "real_tokens": 634,
+          "total_tokens": 4096
+        },
+        "128": {
+          "seconds_per_step": 0.3341317601501942,
+          "examples_per_second": 383.0824101919053,
+          "peak_allocated_mib": 587.87744140625,
+          "real_tokens": 1356,
+          "total_tokens": 8192
+        },
+        "256": {
+          "seconds_per_step": 0.3358518473803997,
+          "examples_per_second": 762.2408570825689,
+          "peak_allocated_mib": 1115.1787109375,
+          "real_tokens": 2617,
+          "total_tokens": 16384
+        }
+      },
+      "throughput_ratio_256_to_32": 8.000407637801167
+    }
+  },
+  "limitations": [
+    "All new-run scores are the best epoch selected by accuracy on the same 872-example official SST-2 validation set. No hidden-label test data were evaluated.",
+    "The five pilots use 8192 training examples each. The control and padding-mask runs within each seed have identical training subset indices, architecture, epochs and optimizer settings.",
+    "Seed 43 uses dense LCU for control and sparse LCU for masking. The sparse kernel computes the same masked operation and is covered by output/gradient equivalence tests; floating-point ordering can still change optimization trajectories.",
+    "Two paired seeds provide a small descriptive comparison, not a statistical significance result or an unbiased test estimate. Both checkpoint and experiment choices reuse the same validation set.",
+    "The regularized seed-42 run bundles AdamW with weight decay 0.01, a cosine learning-rate schedule and head dropout 0.1. It does not isolate the effect of any individual change.",
+    "The full-data run uses 67349 training rows and batch size 256, while pilots use 8192 rows and batch size 32. It is not a same-budget controlled comparison. The historical checkpoint also used a different architecture/training protocol.",
+    "The historical checkpoint stores no vocabulary/configuration hash. Its vocabulary was reconstructed from the current full ordered training data; parameter shapes and learned keys match, but original vocabulary provenance cannot be proven.",
+    "Dense/sparse and batch-size throughput measurements time synchronized forward/backward steps only, exclude optimizer and data-loader work, and use dropout-disabled evaluation-mode models with gradients enabled. They do not measure end-to-end training acceleration."
+  ]
+}

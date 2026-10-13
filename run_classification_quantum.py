@@ -132,7 +132,7 @@ class QuixerZReadoutClassifier(torch.nn.Module):
 
         self.base.quantum_feedforward(
             self.base.torchquantum_device,
-            self.base.quantum_feedforward_parameters.repeat(1, batch_size),
+            self.base.quantum_feedforward_parameters.unsqueeze(0).expand(batch_size, -1),
         )
 
         # Measure X/Y/Z expectations on all qubits (reuses model's measurement stack)
@@ -193,7 +193,7 @@ class QuixerTwoZReadoutClassifier(torch.nn.Module):
 
         self.base.quantum_feedforward(
             self.base.torchquantum_device,
-            self.base.quantum_feedforward_parameters.repeat(1, batch_size),
+            self.base.quantum_feedforward_parameters.unsqueeze(0).expand(batch_size, -1),
         )
 
         expectation_values = self.base.measure_all_x_y_z(self.base.torchquantum_device)
@@ -212,18 +212,40 @@ class QuixerTwoZReadoutClassifier(torch.nn.Module):
 
 
 class QuixerMLPReadoutClassifier(torch.nn.Module):
-    """Hybrid readout that feeds all expectation values into a small MLP classifier."""
+    """Hybrid readout with optional padding masking and hidden-layer dropout.
 
-    def __init__(self, base: Quixer, num_labels: int = 2, use_measure_mask: bool = False):
+    Leave pad_idx=None to retain the legacy treatment of padding as real tokens.
+    A pad_idx excludes those positions from the LCU and normalizes its coefficients
+    independently for each example. Completely padded rows produce a finite result
+    through the polynomial's constant term. sparse_padding additionally skips
+    quantum simulation for those padding positions, while retaining every valid
+    token even when its trainable LCU coefficient is zero.
+    """
+
+    def __init__(
+        self,
+        base: Quixer,
+        num_labels: int = 2,
+        use_measure_mask: bool = False,
+        pad_idx: int | None = None,
+        head_dropout: float = 0.0,
+        sparse_padding: bool = False,
+    ):
         super().__init__()
         self.base = base
         self.use_measure_mask = use_measure_mask
+        self.pad_idx = pad_idx
+        self.sparse_padding = sparse_padding
+        if pad_idx is not None and not 0 <= pad_idx < self.base.embedding.num_embeddings:
+            raise ValueError("pad_idx must be a valid vocabulary index")
         if self.use_measure_mask:
             # Learnable mask over measurement features
             self.measure_mask = torch.nn.Parameter(torch.zeros(self.base.nr_of_measurements))
         self.classifier = torch.nn.Sequential(
             torch.nn.Linear(self.base.nr_of_measurements, self.base.embedding_dimension),
-            torch.nn.ReLU(),
+            # The parameter-free activation block keeps Linear state_dict keys
+            # unchanged, including when dropout is enabled for new experiments.
+            torch.nn.Sequential(torch.nn.ReLU(), torch.nn.Dropout(head_dropout)),
             torch.nn.Linear(self.base.embedding_dimension, num_labels),
         )
 
@@ -237,8 +259,12 @@ class QuixerMLPReadoutClassifier(torch.nn.Module):
         )
         initial_states[:, 0] = 1.0
 
-        lcu_coefficients = self.base.lcu_coefficients.repeat(batch_size, 1)
-        lcu_coefficients = torch.nn.functional.normalize(lcu_coefficients, p=1)
+        lcu_coefficients = self.base.lcu_coefficients.unsqueeze(0).expand(batch_size, -1)
+        token_mask = None
+        if self.pad_idx is not None:
+            token_mask = x.ne(self.pad_idx)
+            lcu_coefficients = lcu_coefficients * token_mask
+        lcu_coefficients = torch.nn.functional.normalize(lcu_coefficients, p=1, dim=-1)
 
         qsvt_lcu_state = apply_qsvt_and_lcu(
             initial_states,
@@ -248,6 +274,7 @@ class QuixerMLPReadoutClassifier(torch.nn.Module):
             self.base.n_qubits,
             lcu_coefficients,
             self.base.qsvt_polynomial_coefficients,
+            token_mask=token_mask if self.sparse_padding else None,
         )
 
         self.base.torchquantum_device.set_states(
@@ -256,7 +283,7 @@ class QuixerMLPReadoutClassifier(torch.nn.Module):
 
         self.base.quantum_feedforward(
             self.base.torchquantum_device,
-            self.base.quantum_feedforward_parameters.repeat(1, batch_size),
+            self.base.quantum_feedforward_parameters.unsqueeze(0).expand(batch_size, -1),
         )
 
         expectation_values = self.base.measure_all_x_y_z(self.base.torchquantum_device)
@@ -323,4 +350,3 @@ def load_text_classification_parquet(train_path: str, test_path: str) -> Tuple[L
     test_texts, test_labels = _extract_xy(test_table)
 
     return train_texts, train_labels, test_texts, test_labels
-

@@ -30,3 +30,6 @@ figures/
 *.zip
 *.tar.gz
 .DS_Store
+experiments/
+runs/
+*.tmp

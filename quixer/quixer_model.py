@@ -72,6 +72,7 @@ def apply_qsvt_and_lcu(
     n_qubits: int,
     lcu_coefficients: torch.Tensor,
     qsvt_polynomial_coefficients: torch.Tensor,
+    token_mask: torch.Tensor | None = None,
 ) -> torch.Tensor:
     """
     Applies the Linear Combination of Unitaries and the Quantum Singular Value Decomposition polynomial
@@ -88,6 +89,8 @@ def apply_qsvt_and_lcu(
       n_qubits: Number of qubits for quantum states corresponding to the token embeddings.
       lcu_coefficients: Coefficients of the linear combination of unitaries.
       qsvt_polynomial_coefficients: Coefficients of the polynomial applied using the QSVT.
+      token_mask: Optional boolean [batch, tokens] mask of tokens to simulate. This
+        must describe structural padding, not which trainable coefficients are zero.
 
     """
     # Variable tracking the quantum state as the terms of the polynomial in the QSVT are applied
@@ -106,12 +109,14 @@ def apply_qsvt_and_lcu(
             torchquantum_device,
             n_qubits,
             lcu_coefficients,
+            token_mask=token_mask,
         )
         accumulated_state = accumulated_state + c * monomial_state
 
-    return accumulated_state / torch.linalg.vector_norm(
-        qsvt_polynomial_coefficients, ord=1
-    )
+    # A zero polynomial is possible during optimization. Keep its output finite
+    # instead of introducing NaNs into the complete computation graph.
+    coefficient_norm = torch.linalg.vector_norm(qsvt_polynomial_coefficients, ord=1)
+    return accumulated_state / coefficient_norm.clamp_min(1e-12)
 
 
 def apply_linear_combination_of_unitaries(
@@ -121,6 +126,7 @@ def apply_linear_combination_of_unitaries(
     torchquantum_device: QuantumDevice,
     n_qubits: int,
     lcu_coefficients: torch.Tensor,
+    token_mask: torch.Tensor | None = None,
 ) -> torch.Tensor:
     """
     Applies a linear combination of unitaries to a set of initial states. The unitaries
@@ -135,8 +141,29 @@ def apply_linear_combination_of_unitaries(
       torchquantum_device: TorchQuantum object representing quantum device.
       n_qubits: Number of qubits for quantum states corresponding to the token embeddings.
       lcu_coefficients: Coefficients of the linear combination of unitaries.
+      token_mask: Optional boolean [batch, tokens] structural mask. Masked tokens
+        contribute zero without allocating or simulating their quantum states.
 
     """
+    if token_mask is not None:
+        if token_mask.dtype != torch.bool or token_mask.shape != pqc_parameters.shape[:2]:
+            raise ValueError("token_mask must be boolean with shape [batch, tokens]")
+        batch_indices, token_indices = token_mask.nonzero(as_tuple=True)
+        if batch_indices.numel() == 0:
+            # Preserve the dense path's zero gradients, rather than disconnecting
+            # trainable parameters when an entire batch consists of padding.
+            return (initial_states * 0 + pqc_parameters.sum() * 0
+                    + lcu_coefficients.sum() * 0)
+        torchquantum_device.set_states(initial_states[batch_indices])
+        parameterized_quantum_circuit(
+            torchquantum_device, pqc_parameters[batch_indices, token_indices]
+        )
+        states = torchquantum_device.get_states_1d()
+        weighted_states = states * lcu_coefficients[batch_indices, token_indices, None]
+        return initial_states.new_zeros(initial_states.shape).index_add(
+            0, batch_indices, weighted_states
+        )
+
     # Initial state repeated along the batch dimension
     repeated_initial_state = initial_states.repeat(1, pqc_parameters.shape[1]).view(
         -1, 2**n_qubits
@@ -173,6 +200,8 @@ class Quixer(torch.nn.Module):
         dropout: float,
         batch_size: int,
         device: Device,
+        n_ff_layers: int | None = None,
+        include_output_head: bool = True,
     ):
         """
         Args:
@@ -194,6 +223,13 @@ class Quixer(torch.nn.Module):
             Size of each batch.
           device:
             Torch device the model will be classically simulated on.
+          n_ff_layers:
+            Explicit quantum feedforward depth. Each layer has exactly 4*n_qubits
+            parameters. None retains the legacy one-layer circuit and parameter
+            shape so existing checkpoints still load strictly.
+          include_output_head:
+            Whether to allocate the vocabulary prediction head. Classifier wrappers
+            can set False because they supply their own readout head.
         """
 
         super().__init__()
@@ -257,14 +293,20 @@ class Quixer(torch.nn.Module):
             torch.rand(self.n_tokens, dtype=torch.complex64)
         )
 
-        # TorchQuantum representation of "ansatz 14" parameterized quantum circuit
-        # uses 1 layer
-        self.quantum_feedforward = tq.GeneralEncoder(
-            ansatz_14_torchquantum_specification(n_qubits)
+        if n_ff_layers is not None and n_ff_layers < 1:
+            raise ValueError("n_ff_layers must be at least 1, or None for legacy checkpoints")
+        self.n_ff_layers = 1 if n_ff_layers is None else n_ff_layers
+        n_ff_parameters = (
+            self.n_pqc_parameters if n_ff_layers is None else 4 * n_qubits * n_ff_layers
         )
+        # Explicit depth removes the unused parameters present in legacy models.
+        self.quantum_feedforward = tq.GeneralEncoder(
+            ansatz_14_torchquantum_specification(n_qubits, self.n_ff_layers)
+        )
+        self.quantum_feedforward.n_wires = self.n_qubits
 
         self.quantum_feedforward_parameters = torch.nn.Parameter(
-            torch.rand(self.n_pqc_parameters)
+            torch.rand(n_ff_parameters)
         )
 
         self.measure_all_x_y_z = tq.MeasureMultipleTimes(
@@ -282,10 +324,13 @@ class Quixer(torch.nn.Module):
 
         # Output unembedding layer
         # Produces logits for the output distribution over tokens
-        self.output_feedforward = torch.nn.Sequential(
-            torch.nn.Linear(self.nr_of_measurements, self.embedding_dimension),
-            torch.nn.ReLU(),
-            torch.nn.Linear(self.embedding_dimension, vocabulary_size),
+        self.output_feedforward = (
+            torch.nn.Sequential(
+                torch.nn.Linear(self.nr_of_measurements, self.embedding_dimension),
+                torch.nn.ReLU(),
+                torch.nn.Linear(self.embedding_dimension, vocabulary_size),
+            )
+            if include_output_head else torch.nn.Identity()
         )
 
     def forward(self, x):
@@ -330,7 +375,7 @@ class Quixer(torch.nn.Module):
         # Apply a PQC at the end with a separate set of trainable parameters
         self.quantum_feedforward(
             self.torchquantum_device,
-            self.quantum_feedforward_parameters.repeat(1, batch_size),
+            self.quantum_feedforward_parameters.unsqueeze(0).expand(batch_size, -1),
         )
 
         # Measure expectation values

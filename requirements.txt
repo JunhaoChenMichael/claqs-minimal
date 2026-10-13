@@ -1,0 +1,13 @@
+# Python 3.11. Install matching torch/torchvision wheels first if using CUDA.
+numpy<2
+torch==2.3.0
+torchvision==0.18.0
+torchtext==0.18.0
+torchquantum==0.1.8
+qiskit==0.46.3
+qiskit-terra==0.46.3
+qiskit-aer==0.13.3
+qiskit-ibm-provider==0.10.0
+qiskit-ibm-runtime==0.20.0
+pyarrow==21.0.0
+tqdm==4.67.1
